@@ -16,7 +16,7 @@ class GeneratePersonalAccessTokenService {
         return PersonalAccessToken::create([
             'tokenable_type' => 'public.users',
             'tokenable_id' => $user->id,
-            'token' => Hash::make(uniqid()),
+            'token' => Hash::make(date('YmdHis') . $user->id),
             'created_at' => now(),
         ]);
     }
