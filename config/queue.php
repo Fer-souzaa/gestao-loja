@@ -89,6 +89,15 @@ return [
             ],
         ],
 
+        'horizon' => [
+            'driver' => 'redis',
+            'connection' => 'default',
+            'queue' => 'default',
+            'balance' => 'simple',
+            'processes' => 10,
+            'tries' => 100000,
+        ],
+
     ],
 
     /*
