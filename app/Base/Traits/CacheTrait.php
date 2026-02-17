@@ -17,7 +17,7 @@ trait CacheTrait {
     public function cache(string $key, callable $callback, ?int $ttl = null): mixed
     {
         try {
-            if (config('api.cache.use_cache')) {
+            if (config('app.cache.active')) {
                 return Cache::remember($key, $ttl ?? config('api.cache.ttl'), $callback);
             }
             return $callback();
@@ -40,14 +40,6 @@ trait CacheTrait {
      */
     public function clearAccessToken($access_token): void {
         Cache::forget('token_' . $access_token);
-    }
-
-    /**
-     * @param $refresh_token
-     * @return void
-     */
-    public function clearRefreshToken($refresh_token): void {
-        Cache::forget('refresh_token_' . $refresh_token);
     }
 
 }

@@ -123,4 +123,9 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'cache' => [
+        'active' => env('APP_CACHE_ACTIVE', false),
+        'ttl' => 86000
+    ]
+
 ];

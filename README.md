@@ -1,59 +1,85 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Gestão de Estoque
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistema focado em gerenciar vendas e estoque de produtos de uma loja, construído com Laravel 12 e PHP 8.4.
 
-## About Laravel
+## 🚀 Tecnologias
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **PHP 8.4**
+- **Laravel 12**
+- **PostgreSQL** (com suporte a PostGIS)
+- **Redis**
+- **Laravel Horizon** (Gestão de filas)
+- **Docker & Docker Compose**
+- **Pest** (Testes automatizados)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 📋 Requisitos
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Docker e Docker Compose
+- Make (opcional, mas recomendado para facilitar o uso dos comandos)
 
-## Learning Laravel
+## 🛠️ Instalação e Configuração
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+O projeto utiliza um `Makefile` para automatizar os processos de configuração.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+1.  **Clonar o repositório:**
+    ```bash
+    git clone <url-do-repositorio>
+    cd gestao-estoque
+    ```
 
-## Laravel Sponsors
+2.  **Configurar o ambiente:**
+    Copie o arquivo `.env.example` para `.env` e ajuste as variáveis se necessário (as configurações padrão funcionam com o Docker).
+    ```bash
+    cp .env.example .env
+    ```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+3.  **Instalação automática:**
+    O comando abaixo realiza o build dos containers, instala dependências (Composer e NPM) e gera a chave da aplicação.
+    ```bash
+    make install
+    ```
 
-### Premium Partners
+4.  **Subir os serviços:**
+    ```bash
+    make up
+    ```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+5.  **Executar as migrações:**
+    ```bash
+    make migrate
+    ```
 
-## Contributing
+A aplicação estará disponível em: [http://localhost:8089](http://localhost:8089)
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## ⚙️ Comandos Úteis (Makefile)
 
-## Code of Conduct
+O projeto disponibiliza diversos comandos via `make` para facilitar o desenvolvimento:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+- `make up`: Inicia os containers em modo background.
+- `make down`: Para e remove os containers.
+- `make restart`: Reinicia os containers e limpa o cache.
+- `make shell-php`: Acessa o terminal do container PHP.
+- `make migrate`: Executa as migrações do banco de dados.
+- `make migrate-fresh`: Reinicia o banco de dados e executa todas as migrações.
+- `make test`: Executa os testes automatizados (Pest/PHPUnit).
+- `make logs`: Exibe os logs de todos os containers.
+- `make clear`: Limpa todos os caches da aplicação (config, route, optimize).
 
-## Security Vulnerabilities
+## 📦 Estrutura do Projeto
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+O projeto segue uma arquitetura modularizada utilizando o diretório `app/Packages` para organizar as funcionalidades principais, além da estrutura padrão do Laravel.
 
-## License
+- `app/Packages/Auth`: Módulo responsável pela autenticação.
+- `database/migrations`: Definições da estrutura do banco de dados.
+- `.docker`: Configurações de infraestrutura (Nginx, PHP, PostgreSQL, Redis).
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 🧪 Testes
+
+Para rodar os testes da aplicação, utilize:
+```bash
+make test
+```
+
+## 📄 Licença
+
+Este projeto é um software open-source sob a licença [MIT](https://opensource.org/licenses/MIT).
