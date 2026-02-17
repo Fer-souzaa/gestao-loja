@@ -25,7 +25,7 @@ class AuthController extends BaseController {
             }
 
             return self::successResponse(
-                message: 'Seja bem vindo! Login realizado com sucesso!',
+                message: 'Seja bem vinda Ananda! Login realizado com sucesso!',
                 status_code: 201
             );
         } catch (Exception $exception) {
