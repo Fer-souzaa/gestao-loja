@@ -31,5 +31,3 @@ docker-compose.local.yml
 .docker/pgsql/backups/*.sql
 .docker/nginx/nginx.conf
 boost.json
-.junie
-.junie/guidelines.md

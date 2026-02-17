@@ -44,8 +44,8 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 
 # Add user for laravel application
-ARG ID_USER_LINUX=1001
-ARG ID_GROUP_LINUX=1001
+ARG ID_USER_LINUX=1000
+ARG ID_GROUP_LINUX=1000
 
 RUN groupadd -g ${ID_GROUP_LINUX} www
 RUN useradd -u ${ID_USER_LINUX} -ms /bin/bash -g www www
