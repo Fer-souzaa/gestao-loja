@@ -20,7 +20,7 @@ class AuthController extends BaseController {
             $username = $request->validated('username');
             $password = $request->validated('password');
 
-            if ($username != 'admin' || $password != 'TesteDeIntegracao') {
+            if ($username != 'admin' || $password != config('auth.test_password')) {
                 throw new InvalidArgumentException('Usuário ou senha incorretos');
             }
 

@@ -124,7 +124,7 @@ services:
   # Postgres (PostGIS) — only in dev/local profiles (production -> external DB)
   pgsql:
     <<: *defaults
-    profiles: ["local", "hml"]
+    profiles: ["local", "hml", "dev"]
     shm_size: 512m
     image: "postgis/postgis:${POSTGRES_VERSION:-17-master}"
     container_name: "${PREFIX:-gestao_estoque}_${DB_CONTAINER_NAME:-postgres}"
