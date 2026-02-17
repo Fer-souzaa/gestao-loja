@@ -13,7 +13,8 @@
         "laravel/framework": "^12.0",
         "laravel/horizon": "^5.44",
         "laravel/tinker": "^2.10.1",
-        "predis/predis": "^3.4"
+        "predis/predis": "^3.4",
+        "spatie/laravel-data": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
