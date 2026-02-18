@@ -19,5 +19,7 @@ Route::prefix('v1')->name('v1.')->group(function () {
     Route::prefix('colors')->name('colors.')->group(function () {
         Route::get('', [ColorController::class, 'index'])->name('index');
         Route::post('', [ColorController::class, 'store'])->name('store');
+        Route::put('{id}', [ColorController::class, 'update'])->name('update');
+        Route::delete('{id}', [ColorController::class, 'destroy'])->name('destroy');
     });
 });

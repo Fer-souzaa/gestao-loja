@@ -5,9 +5,14 @@ namespace App\Packages\Color\Controllers;
 use App\Base\Http\Controllers\BaseController;
 use App\Base\Traits\CacheTrait;
 use App\Packages\Color\DTO\StoreColorDTO;
+use App\Packages\Color\DTO\UpdateColorDTO;
 use App\Packages\Color\Requests\StoreColorRequest;
+use App\Packages\Color\Requests\UpdateColorRequest;
+use App\Packages\Color\Services\DeleteColorService;
 use App\Packages\Color\Services\ListColorsService;
 use App\Packages\Color\Services\StoreColorService;
+use App\Packages\Color\Services\UpdateColorService;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -42,5 +47,44 @@ class ColorController extends BaseController {
             message: 'Cor cadastrada com sucesso!',
             status_code: Response::HTTP_CREATED
         );
+    }
+
+    /**
+     * @param int $id
+     * @param UpdateColorRequest $request
+     * @param UpdateColorService $service
+     * @return JsonResponse
+     */
+    public function update(int $id, UpdateColorRequest $request, UpdateColorService $service): JsonResponse {
+        try {
+            return self::successResponse(
+                data: $service->execute(
+                    $id,
+                    new UpdateColorDTO(
+                        name: $request->validated('name'),
+                        active: $request->validated('active')
+                    )
+                ),
+                message: 'Cor atualizada com sucesso!'
+            );
+        } catch (Exception $exception) {
+            return self::returnError($exception);
+        }
+    }
+
+    /**
+     * @param int $id
+     * @param DeleteColorService $service
+     * @return JsonResponse
+     */
+    public function destroy(int $id, DeleteColorService $service): JsonResponse {
+        try {
+            return self::successResponse(
+                data: $service->execute($id),
+                message: 'Cor removida com sucesso!'
+            );
+        } catch (Exception $exception) {
+            return self::returnError($exception);
+        }
     }
 }
