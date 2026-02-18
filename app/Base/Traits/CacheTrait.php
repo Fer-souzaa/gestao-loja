@@ -42,4 +42,12 @@ trait CacheTrait {
         Cache::forget('token_' . $access_token);
     }
 
+    /**
+     * @param $key
+     * @return void
+     */
+    public function clearCache($key): void {
+        Cache::forget($key);
+    }
+
 }

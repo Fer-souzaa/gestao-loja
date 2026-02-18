@@ -2,12 +2,16 @@
 
 namespace App\Packages\Collection\Services;
 
+use App\Base\Traits\CacheTrait;
 use App\Packages\Collection\Models\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Cache;
 
 class DeleteCollectionService
 {
+
+    use CacheTrait;
+
     /**
      * @param int $id
      * @return bool
@@ -24,7 +28,7 @@ class DeleteCollectionService
         $deleted = (bool) $collection->delete();
 
         if ($deleted) {
-            Cache::forget('collections');
+            $this->clearCache('collections');
         }
 
         return $deleted;
