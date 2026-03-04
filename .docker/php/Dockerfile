@@ -1,9 +1,9 @@
-FROM php:8.4-fpm
+# --- PHP + Node (build único) ---
+FROM php:8.4-cli
 
-# Set working directory
 WORKDIR /var/www/html
 
-# Install dependencies
+# Dependências do sistema
 RUN apt-get update && apt-get install -y \
     build-essential \
     libpng-dev \
@@ -12,9 +12,6 @@ RUN apt-get update && apt-get install -y \
     locales \
     locales-all \
     zip \
-    jpegoptim optipng pngquant gifsicle \
-    imagemagick \
-    vim \
     unzip \
     git \
     curl \
@@ -24,75 +21,40 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     libmagickwand-dev \
     libgmp-dev \
-    libxml2-dev \
-    zlib1g-dev libicu-dev g++ \
+    zlib1g-dev \
+    libicu-dev \
+    g++ \
     cron \
-    supervisor \
-    sudo \
-    procps
+    supervisor
 
-# Clear cache
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+# Extensões PHP
+RUN docker-php-ext-install pdo_pgsql pgsql gd bcmath zip pcntl
+RUN pecl install swoole && docker-php-ext-enable swoole
 
-# Install extensions
-RUN docker-php-ext-install exif pcntl zip mbstring bcmath sockets dom xml
-RUN docker-php-ext-configure gd  --with-freetype=/usr/include/ --with-jpeg=/usr/include/
-RUN docker-php-ext-install gd pdo pdo_pgsql intl gmp
+# PHP.ini
+COPY ./docker/8.4/php.ini /usr/local/etc/php/conf.d/99-production.ini
 
-# Install composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+# Supervisor
+COPY ./docker/8.4/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
+# Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Add user for laravel application
-ARG ID_USER_LINUX=1000
-ARG ID_GROUP_LINUX=1000
+# Copia projeto
+COPY . .
 
-RUN groupadd -g ${ID_GROUP_LINUX} www
-RUN useradd -u ${ID_USER_LINUX} -ms /bin/bash -g www www
-RUN chown -R www:www /var/www
+# Instala deps PHP
+RUN composer install --no-dev --optimize-autoloader
 
-RUN echo "www ALL=(ALL) NOPASSWD: /usr/bin/supervisord" >> /etc/sudoers
+# Instala deps Node
+RUN npm install
 
+# Builda assets (Wayfinder agora encontra o PHP 👍)
+RUN npm run build
 
-#88 Configuring locale to pt_BR.UTF-8
-ENV LC_ALL pt_BR.UTF-8
-ENV LANG pt_BR.UTF-8
-ENV LANGUAGE pt_BR.UTF-8
+# Permissões
+RUN chown -R www-data:www-data storage bootstrap/cache
 
-# Create supervisor log file and change ownership
-RUN touch /var/log/supervisor/supervisord.log
-RUN chown www:www /var/log/supervisor/supervisord.log
+EXPOSE 8000
 
-# Create supervisor pid file and change ownership
-RUN touch /var/run/supervisord.pid
-RUN chown www:www /var/run/supervisord.pid
-
-# Copy Supervisor configuration
-COPY supervisor/supervisord.conf /etc/supervisor/supervisord.conf
-RUN chown www:www /etc/supervisor/supervisord.conf && chmod 644 /etc/supervisor/supervisord.conf
-
-# Copy Horizon configuration
-COPY horizon/horizon.conf /etc/supervisor/conf.d
-
-# Copy crontab file
-COPY crontab /etc/cron.d/laravel-cron
-RUN chmod 0644 /etc/cron.d/laravel-cron && crontab /etc/cron.d/laravel-cron && touch /var/log/cron.log
-
-# Copy start script and make it executable
-COPY start.sh /usr/local/bin/start.sh
-RUN chmod +x /usr/local/bin/start.sh
-
-# Change current user to www
-USER www
-RUN echo 'alias pa="php artisan "' >> ~/.bashrc
-
-# Change current user to root
-USER root
-RUN echo 'alias pa="php artisan "' >> ~/.bashrc
-
-# Change current user to www
-USER www
-# Expose port 9000 and start php-fpm server
-EXPOSE 9000
-# Start PHP-FPM, Cron, and Supervisor using the start script
-CMD ["/usr/local/bin/start.sh"]
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]

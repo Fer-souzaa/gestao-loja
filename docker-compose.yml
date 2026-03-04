@@ -58,6 +58,8 @@ services:
         ID_GROUP_LINUX: ${ID_GROUP_LINUX:-1001}
         ID_USER_LINUX: ${ID_USER_LINUX:-1001}
         PHP_VERSION: ${PHP_VERSION:-8.4}
+    ports:
+      - '${APP_PORT:-80}:8000'
     container_name: "${PREFIX:-gestao_estoque}_${PHP_CONTAINER_NAME:-api_php}"
     environment:
       SERVICE_NAME: api
