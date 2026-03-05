@@ -23,6 +23,7 @@ Você, como agente, possui ferramentas específicas projetadas para este ambient
 - **Comentários e Enums:** Prefira blocos PHPDoc (com *array shapes* quando aplicável) ao invés de comentários *inline*. Chaves de Enums devem usar `TitleCase` (ex: `Monthly`).
 - **Utilização de DTO:** Por favor, sempre que um método for receber mais de 2 parâmetros, prefira utilizar DTO para a transferência desses dados entre classes.
 - **Service & Repository Pattern:** Utilize o padrão de projeto de Service Pattern para conter a lógica do endpoint e o Repository Pattern para isolar as consultas SQL (Eloquent ou nativas). As consultas devem residir exclusivamente nos repositories e serem chamadas através dos Services.
+- **Injeção de dependência:** Para a Injeção de outros serviços e repositórios no escopo do método, pode ser utilizado o container do laravel `app(Service::class)`, evitando a declaração de muitos itens no `_construct()` da classe.
 
 ## 4. Arquitetura Laravel 12
 - **Estrutura Moderna:** O projeto segue a estrutura simplificada do Laravel 11/12. Não crie ou procure arquivos na pasta `app/Http/Middleware/` ou `Console/Kernel.php`. Middlewares, roteamento e exceções devem ser registrados em `bootstrap/app.php`. Comandos de console em `app/Console/Commands/` são auto-registrados.
