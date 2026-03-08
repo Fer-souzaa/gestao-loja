@@ -3,6 +3,7 @@
 use App\Packages\Auth\Controllers\AuthController;
 use App\Packages\Collection\Controllers\CollectionController;
 use App\Packages\Color\Controllers\ColorController;
+use App\Packages\Customer\Controllers\CustomerController;
 use App\Packages\Employee\Controllers\EmployeeController;
 use Illuminate\Support\Facades\Route;
 
@@ -44,5 +45,12 @@ Route::prefix('v1')->name('v1.')->group(function () {
         Route::get('', [EmployeeController::class, 'index'])->name('index');
         Route::post('sellers', [EmployeeController::class, 'storeSeller'])->name('store-seller');
         Route::delete('sellers/{id}', [EmployeeController::class, 'terminateSeller'])->name('terminate-seller');
+    });
+
+    /**
+     * Clientes
+     */
+    Route::prefix('customers')->name('customers.')->group(function () {
+        Route::post('', [CustomerController::class, 'store'])->name('store');
     });
 });
