@@ -23,11 +23,11 @@ class LoginService {
         return DB::transaction(function () use ($username, $password) {
             $user = User::firstWhere('username', $username);
             if (!$user) {
-                throw new ModelNotFoundException('Usuário não encontrado!');
+                throw new ModelNotFoundException('Usuário ou senha incorretos!');
             }
 
             if (!Hash::check($password, $user->password)) {
-                throw new ModelNotFoundException('Senha incorreta!');
+                throw new ModelNotFoundException('Usuário ou senha incorretos!');
             }
 
             $access_token = app(GeneratePersonalAccessTokenService::class)->execute($user);
