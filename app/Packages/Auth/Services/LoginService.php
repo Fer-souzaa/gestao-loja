@@ -43,14 +43,17 @@ class LoginService {
             app(TokenInCacheService::class)->execute($access_token->token, $access_token);
             app(UserInCacheService::class)->execute($user->id, $user);
 
-            return [
-                'access_token' => $access_token->token,
-                'user' => [
-                    'id' => $user->id,
-                    'username' => $user->username
-                ],
-                ...json_decode($employee_data, true)
-            ];
+            return app(UserDataInCacheService::class)->execute(
+                token: $access_token->token,
+                user_data: [
+                    'access_token' => $access_token->token,
+                    'user' => [
+                        'id' => $user->id,
+                        'username' => $user->username
+                    ],
+                    ...json_decode($employee_data, true)
+                ]
+            );;
         });
     }
 }

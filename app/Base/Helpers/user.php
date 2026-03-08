@@ -1,6 +1,7 @@
 <?php
 
-use App\Packages\Admin\User\Services\UserDataInCacheByTokenService;
+use App\Packages\Auth\Services\TokenInCacheService;
+
 
 /**
  * @return string
@@ -9,6 +10,9 @@ function getClientIp(): string {
     return request()->header('X-Client-Ip') ?? request()->getClientIp();
 }
 
-function userObject(): mixed {
-    return data_get(app(UserDataInCacheByTokenService::class)->execute(), 'user');
+/**
+ * @return string|null
+ */
+function getToken(): ?string {
+    return handlerRequestToken(request()->bearerToken());
 }

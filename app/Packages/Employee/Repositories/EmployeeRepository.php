@@ -4,12 +4,34 @@ namespace App\Packages\Employee\Repositories;
 
 use App\Base\Repository\BaseRepository;
 use App\Packages\Employee\Models\Employee;
+use App\Packages\EmployeeFunction\Enum\FunctionSlugEnum;
 use DB;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class EmployeeRepository extends BaseRepository {
 
     public function __construct() {
         $this->setModel(Employee::class);
+    }
+
+    /**
+     * @param int $company_id
+     * @param int|null $per_page
+     * @return LengthAwarePaginator
+     */
+    public function listSellersByCompany(int $company_id, ?int $per_page = 15): LengthAwarePaginator {
+        return $this->model
+            ->join('social.person as p', 'e.person_id', '=', 'p.id')
+            ->select([
+                'p.name',
+                'p.phone',
+                'p.email',
+                'e.start_at'
+            ])
+            ->where('e.company_id', $company_id)
+            ->where('e.employee_function_id', FunctionSlugEnum::getId(FunctionSlugEnum::VENDEDOR))
+            ->whereNull('e.ends_at')
+            ->paginate($per_page);
     }
 
     /**

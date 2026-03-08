@@ -38,7 +38,16 @@
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/"
-        }
+        },
+        "files": [
+            "app/Base/Helpers/data.php",
+            "app/Base/Helpers/paths.php",
+            "app/Base/Helpers/hashs.php",
+            "app/Base/Helpers/strings.php",
+            "app/Base/Helpers/validation.php",
+            "app/Base/Helpers/sql.php",
+            "app/Base/Helpers/user.php"
+        ]
     },
     "scripts": {
         "setup": [

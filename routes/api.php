@@ -3,6 +3,7 @@
 use App\Packages\Auth\Controllers\AuthController;
 use App\Packages\Collection\Controllers\CollectionController;
 use App\Packages\Color\Controllers\ColorController;
+use App\Packages\Employee\Controllers\EmployeeController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->name('v1.')->group(function () {
@@ -34,5 +35,13 @@ Route::prefix('v1')->name('v1.')->group(function () {
         Route::post('', [CollectionController::class, 'store'])->name('store');
         Route::put('{id}', [CollectionController::class, 'update'])->name('update');
         Route::delete('{id}', [CollectionController::class, 'destroy'])->name('destroy');
+    });
+
+    /**
+     * Funcionários
+     */
+    Route::prefix('employees')->name('employees.')->group(function () {
+        Route::get('', [EmployeeController::class, 'index'])->name('index');
+        Route::post('sellers', [EmployeeController::class, 'storeSeller'])->name('store-seller');
     });
 });

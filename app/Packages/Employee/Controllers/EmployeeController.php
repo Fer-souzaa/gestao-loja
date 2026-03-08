@@ -3,8 +3,44 @@
 namespace App\Packages\Employee\Controllers;
 
 use App\Base\Http\Controllers\BaseController;
+use App\Packages\Employee\DTOs\SellerDTO;
+use App\Packages\Employee\Requests\SellerStoreRequest;
+use App\Packages\Employee\Services\EmployeeService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Throwable;
 
 class EmployeeController extends BaseController {
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function index(Request $request): JsonResponse {
+        try {
+            $data = app(EmployeeService::class)->listSellers(
+                $request->query('per_page')
+            );
+            return $data;
+//            return $this->successResponse($data, 'Vendedores listados com sucesso!');
+        } catch (Throwable $exception) {
+            return $this->returnError($exception);
+        }
+    }
 
+    /**
+     * @param SellerStoreRequest $request
+     * @return JsonResponse
+     */
+    public function storeSeller(SellerStoreRequest $request): JsonResponse {
+        try {
+            $data = app(EmployeeService::class)->storeSeller(
+                SellerDTO::fromRequest($request->validated())
+            );
+
+            return $this->successResponse($data, 'Vendedor cadastrado com sucesso!');
+        } catch (Throwable $exception) {
+            return $this->returnError($exception);
+        }
+    }
 }
