@@ -5,6 +5,7 @@ namespace App\Packages\Customer\Controllers;
 use App\Base\Http\Controllers\BaseController;
 use App\Packages\Customer\DTOs\CustomerStoreDTO;
 use App\Packages\Customer\Requests\CustomerStoreRequest;
+use App\Packages\Customer\Resources\CustomerDetailResource;
 use App\Packages\Customer\Resources\CustomerResource;
 use App\Packages\Customer\Services\CustomerService;
 use Illuminate\Http\JsonResponse;
@@ -38,6 +39,23 @@ class CustomerController extends BaseController {
             );
 
             return $this->successResponse($data, 'Cliente cadastrado com sucesso!', 201);
+        } catch (Throwable $exception) {
+            return $this->returnError($exception);
+        }
+    }
+
+    /**
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function show(int $id): JsonResponse {
+        try {
+            $data = app(CustomerService::class)->show($id);
+
+            return $this->successResponse(
+                new CustomerDetailResource($data),
+                'Dados do cliente recuperados com sucesso!'
+            );
         } catch (Throwable $exception) {
             return $this->returnError($exception);
         }

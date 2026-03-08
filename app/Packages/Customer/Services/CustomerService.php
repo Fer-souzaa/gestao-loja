@@ -65,4 +65,22 @@ class CustomerService {
 
         return app(CustomerRepository::class)->listByCompany($companyId);
     }
+
+    /**
+     * @param int $id
+     * @return array
+     * @throws Throwable
+     */
+    public function show(int $id): array {
+        $user_data = app(UserDataInCacheService::class)->execute(getToken());
+        $companyId = (int) data_get($user_data, 'company.id');
+
+        $customer = app(CustomerRepository::class)->findByIdAndCompany($id, $companyId);
+
+        if (!$customer) {
+            throw new \Exception('Cliente não encontrado ou não pertence a sua empresa.', 404);
+        }
+
+        return $customer;
+    }
 }

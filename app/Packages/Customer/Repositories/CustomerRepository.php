@@ -32,6 +32,31 @@ class CustomerRepository extends BaseRepository
     }
 
     /**
+     * @param int $id
+     * @param int $companyId
+     * @return array|null
+     */
+    public function findByIdAndCompany(int $id, int $companyId): ?array
+    {
+        $data = \DB::table('social.customer as c')
+            ->join('social.person as p', 'c.person_id', '=', 'p.id')
+            ->where('c.id', $id)
+            ->where('c.company_id', $companyId)
+            ->select([
+                'c.id',
+                'c.address',
+                'c.billing_date',
+                'p.name',
+                'p.cpf',
+                'p.phone',
+                'p.registration_date'
+            ])
+            ->first();
+
+        return $data ? (array) $data : null;
+    }
+
+    /**
      * @param int $companyId
      * @return array
      */
