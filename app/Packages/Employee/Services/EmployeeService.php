@@ -11,6 +11,7 @@ use App\Packages\Person\Repositories\PersonRepository;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use LaravelIdea\Helper\App\Packages\Employee\Models\_IH_Employee_C;
+use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Throwable;
 
 class EmployeeService {
@@ -55,5 +56,27 @@ class EmployeeService {
                 'is_active' => is_null($employee->ends_at),
             ];
         });
+    }
+
+    /**
+     * @param int $id
+     * @return bool
+     * @throws Throwable
+     */
+    public function terminateSeller(int $id): bool {
+        $user_data = app(UserDataInCacheService::class)->execute(getToken());
+        $company_id = data_get($user_data, 'company.id');
+
+        $employee = app(EmployeeRepository::class)->find($id, model_name: 'Vendedor');
+
+        if ($employee->company_id !== $company_id) {
+            throw new ConflictHttpException('Você não tem permissão para desvincular este vendedor.');
+        }
+
+        if ($employee->employee_function_id != FunctionSlugEnum::getId(FunctionSlugEnum::VENDEDOR)) {
+            throw new ConflictHttpException('Apenas vendedores podem ser desvinculados.');
+        }
+
+        return app(EmployeeRepository::class)->terminate($employee);
     }
 }

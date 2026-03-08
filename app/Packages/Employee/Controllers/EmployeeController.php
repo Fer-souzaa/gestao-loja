@@ -42,4 +42,17 @@ class EmployeeController extends BaseController {
             return $this->returnError($exception);
         }
     }
+
+    /**
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function terminateSeller(int $id): JsonResponse {
+        try {
+            app(EmployeeService::class)->terminateSeller($id);
+            return $this->successResponse(message: 'Vendedor desvinculado com sucesso!');
+        } catch (Throwable $exception) {
+            return $this->returnError($exception);
+        }
+    }
 }

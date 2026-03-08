@@ -43,5 +43,6 @@ Route::prefix('v1')->name('v1.')->group(function () {
     Route::prefix('employees')->name('employees.')->group(function () {
         Route::get('', [EmployeeController::class, 'index'])->name('index');
         Route::post('sellers', [EmployeeController::class, 'storeSeller'])->name('store-seller');
+        Route::delete('sellers/{id}', [EmployeeController::class, 'terminateSeller'])->name('terminate-seller');
     });
 });

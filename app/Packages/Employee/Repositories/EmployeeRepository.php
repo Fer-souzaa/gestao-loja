@@ -59,4 +59,14 @@ class EmployeeRepository extends BaseRepository {
             bindings: [$person_id]
         )?->data;
     }
+
+    /**
+     * @param Employee $employee
+     * @return bool
+     */
+    public function terminate(Employee $employee): bool {
+        return $employee->update([
+            'ends_at' => now()
+        ]);
+    }
 }
