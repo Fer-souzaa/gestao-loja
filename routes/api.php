@@ -51,6 +51,7 @@ Route::prefix('v1')->name('v1.')->group(function () {
      * Clientes
      */
     Route::prefix('customers')->name('customers.')->group(function () {
+        Route::get('', [CustomerController::class, 'index'])->name('index');
         Route::post('', [CustomerController::class, 'store'])->name('store');
     });
 });

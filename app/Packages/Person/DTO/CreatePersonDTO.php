@@ -10,7 +10,8 @@ class CreatePersonDTO extends Data {
         public string $name,
         public ?string $cpf = null,
         public ?string $email = null,
-        public ?string $phone = null
+        public ?string $phone = null,
+        public ?string $registration_date = null,
     ) {
     }
 }

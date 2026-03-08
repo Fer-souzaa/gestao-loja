@@ -8,6 +8,7 @@ class CustomerStoreDTO
         public string $name,
         public string $phone,
         public ?string $cpf = null,
+        public ?string $registration_date = null,
         public ?string $billing_date = null,
         public ?string $address = null,
     ) {
@@ -27,6 +28,7 @@ class CustomerStoreDTO
             name: $data['name'],
             phone: $data['phone'],
             cpf: $data['cpf'] ?? null,
+            registration_date: $data['registration_date'] ?? null,
             billing_date: $data['billing_date'] ?? null,
             address: $data['address'] ?? null,
         );

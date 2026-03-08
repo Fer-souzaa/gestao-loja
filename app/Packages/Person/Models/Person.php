@@ -14,12 +14,14 @@ class Person extends Model {
     {
         return PersonFactory::new();
     }
+
     protected $table = 'social.person';
 
     protected $fillable = [
         'name',
         'cpf',
         'phone',
-        'email'
+        'email',
+        'registration_date'
     ];
 }

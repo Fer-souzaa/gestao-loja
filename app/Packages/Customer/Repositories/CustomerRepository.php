@@ -32,11 +32,22 @@ class CustomerRepository extends BaseRepository
     }
 
     /**
-     * @param array $data
-     * @return Customer
+     * @param int $companyId
+     * @return array
      */
-    public function createCustomer(array $data): Customer
+    public function listByCompany(int $companyId): array
     {
-        return Customer::create($data);
+        return \DB::table('social.customer as c')
+            ->join('social.person as p', 'c.person_id', '=', 'p.id')
+            ->where('c.company_id', $companyId)
+            ->select([
+                'c.id',
+                'p.name',
+                'p.cpf',
+                'p.phone'
+            ])
+            ->orderBy('p.name')
+            ->get()
+            ->toArray();
     }
 }

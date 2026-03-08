@@ -31,7 +31,8 @@ class CustomerService {
                     new CreatePersonDTO(
                         name: $dto->name,
                         cpf: $dto->cpf,
-                        phone: $dto->phone
+                        phone: $dto->phone,
+                        registration_date: $dto->registration_date,
                     )
                 );
             }
@@ -53,5 +54,15 @@ class CustomerService {
                 'address' => $customer->address,
             ];
         });
+    }
+
+    /**
+     * @return array
+     */
+    public function list(): array {
+        $user_data = app(UserDataInCacheService::class)->execute(getToken());
+        $companyId = (int) data_get($user_data, 'company.id');
+
+        return app(CustomerRepository::class)->listByCompany($companyId);
     }
 }
