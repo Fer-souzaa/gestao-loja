@@ -4,9 +4,17 @@ namespace App\Packages\Color\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Database\Factories\ColorFactory;
 
 class Color extends Model
 {
+    /** @use HasFactory<ColorFactory> */
+    use HasFactory;
+
+    protected static function newFactory(): ColorFactory
+    {
+        return ColorFactory::new();
+    }
 
     /**
      * The table associated with the model.

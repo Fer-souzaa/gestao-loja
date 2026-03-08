@@ -17,9 +17,10 @@ beforeEach(function () {
         'id' => 1,
         'name' => 'Empresa Teste',
         'cnpj' => '12345678000199',
+        'email' => 'teste@empresa.com',
     ]);
 
-    EmployeeFunction::create([
+    EmployeeFunction::firstOrCreate([
         'name' => 'Vendedor',
         'slug' => 'vendedor',
     ]);

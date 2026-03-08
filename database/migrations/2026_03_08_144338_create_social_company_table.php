@@ -6,16 +6,18 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
     public function up(): void {
-        Schema::create('social.company', function (Blueprint $table) {
-            $table->id();
-            $table->text('name');
-            $table->text('cnpj')->nullable();
-            $table->text('email');
-            $table->text('phone')->nullable();
-            $table->timestamps();
-            $table->unique(['cnpj']);
-            $table->unique(['email']);
-        });
+        if (!Schema::hasTable('social.company')) {
+            Schema::create('social.company', function (Blueprint $table) {
+                $table->id();
+                $table->text('name');
+                $table->text('cnpj')->nullable();
+                $table->text('email');
+                $table->text('phone')->nullable();
+                $table->timestamps();
+                $table->unique(['cnpj']);
+                $table->unique(['email']);
+            });
+        }
     }
 
     public function down(): void {

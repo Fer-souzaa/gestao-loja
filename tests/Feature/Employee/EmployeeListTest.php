@@ -21,9 +21,10 @@ beforeEach(function () {
         'id' => 1,
         'name' => 'Empresa Teste',
         'cnpj' => '12345678000199',
+        'email' => 'teste@empresa.com',
     ]);
 
-    $function = EmployeeFunction::create([
+    $function = EmployeeFunction::firstOrCreate([
         'name' => 'Vendedor',
         'slug' => 'vendedor',
     ]);
@@ -57,11 +58,11 @@ it('deve listar os vendedores da empresa do usuário logado', function () {
     ]);
 
     // Criar um vendedor de outra empresa (não deve aparecer)
-    Company::create(['id' => 2, 'name' => 'Outra Empresa', 'cnpj' => '00000000000100']);
+    $otherCompany = Company::create(['id' => 2, 'name' => 'Outra Empresa', 'cnpj' => '00000000000100', 'email' => 'outra@empresa.com']);
     $person3 = Person::create(['name' => 'Vendedor 3']);
     Employee::create([
         'person_id' => $person3->id,
-        'company_id' => 2,
+        'company_id' => $otherCompany->id,
         'employee_function_id' => 1,
         'start_at' => '2025-01-03',
     ]);
@@ -72,7 +73,7 @@ it('deve listar os vendedores da empresa do usuário logado', function () {
 
     $response->assertStatus(200)
         ->assertJsonPath('success', true)
-        ->assertJsonCount(2, 'data.data')
+        ->assertJsonCount(2, 'data')
         ->assertJsonFragment(['name' => 'Vendedor 1'])
         ->assertJsonFragment(['name' => 'Vendedor 2'])
         ->assertJsonMissing(['name' => 'Vendedor 3']);
@@ -84,5 +85,5 @@ it('deve retornar listagem vazia se a empresa não tiver vendedores', function (
     ]);
 
     $response->assertStatus(200)
-        ->assertJsonPath('data.data', []);
+        ->assertJsonPath('data', []);
 });

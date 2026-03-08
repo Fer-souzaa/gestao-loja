@@ -107,6 +107,10 @@ trait Response {
             return self::conflictResponse($exception);
         }
 
+        if ($exception instanceof Exception && $exception->getCode() === 403) {
+            return self::notAuthorizeExceptionResponse($exception->getMessage(), 403);
+        }
+
         return self::internalServerErrorResponse($exception);
     }
 

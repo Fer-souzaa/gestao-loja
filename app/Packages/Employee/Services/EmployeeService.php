@@ -8,6 +8,7 @@ use App\Packages\Employee\DTOs\SellerDTO;
 use App\Packages\Employee\Repositories\EmployeeRepository;
 use App\Packages\EmployeeFunction\Enum\FunctionSlugEnum;
 use App\Packages\Person\Repositories\PersonRepository;
+use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use LaravelIdea\Helper\App\Packages\Employee\Models\_IH_Employee_C;
@@ -70,7 +71,7 @@ class EmployeeService {
         $employee = app(EmployeeRepository::class)->find($id, model_name: 'Vendedor');
 
         if ($employee->company_id !== $company_id) {
-            throw new ConflictHttpException('Você não tem permissão para desvincular este vendedor.');
+            throw new Exception('Você não tem permissão para desvincular este vendedor.', 403);
         }
 
         if ($employee->employee_function_id != FunctionSlugEnum::getId(FunctionSlugEnum::VENDEDOR)) {

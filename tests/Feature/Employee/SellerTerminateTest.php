@@ -15,18 +15,16 @@ beforeEach(function () {
     DB::statement("CREATE SCHEMA IF NOT EXISTS social;");
     DB::statement("CREATE SCHEMA IF NOT EXISTS public;");
 
-    $company = Company::create([
-        'id' => 1,
-        'name' => 'Empresa Teste',
-        'cnpj' => '12345678000199',
-        'email' => 'teste@empresa.com',
-    ]);
+    $company = Company::query()->firstOrCreate(
+        ['cnpj' => '12345678000199'],
+        [
+            'id' => 1,
+            'name' => 'Empresa Teste',
+            'email' => 'teste@empresa.com',
+        ]
+    );
 
-    $function = EmployeeFunction::create([
-        'id' => 1,
-        'name' => 'Vendedor',
-        'slug' => 'vendedor',
-    ]);
+    $function = EmployeeFunction::query()->where('slug', 'vendedor')->first();
 
     // Simular usuário logado na empresa 1
     $person = Person::create(['name' => 'Admin', 'phone' => '123', 'email' => 'admin@test.com']);
@@ -45,7 +43,7 @@ it('deve desvincular um vendedor com sucesso', function () {
     $employee = Employee::query()->create([
         'person_id' => $person->id,
         'company_id' => 1,
-        'employee_function_id' => 1,
+        'employee_function_id' => EmployeeFunction::query()->where('slug', 'vendedor')->first()->id,
         'start_at' => now(),
     ]);
 
@@ -64,7 +62,7 @@ it('deve desvincular um vendedor com sucesso', function () {
 });
 
 it('não deve desvincular um vendedor de outra empresa', function () {
-    Company::create([
+    $otherCompany = Company::query()->create([
         'id' => 2,
         'name' => 'Outra Empresa',
         'cnpj' => '87654321000199',
@@ -74,8 +72,8 @@ it('não deve desvincular um vendedor de outra empresa', function () {
     $person = Person::create(['name' => 'Vendedor 2', 'phone' => '11888888888']);
     $employee = Employee::query()->create([
         'person_id' => $person->id,
-        'company_id' => 2,
-        'employee_function_id' => 1,
+        'company_id' => $otherCompany->id,
+        'employee_function_id' => EmployeeFunction::query()->where('slug', 'vendedor')->first()->id,
         'start_at' => now(),
     ]);
 
