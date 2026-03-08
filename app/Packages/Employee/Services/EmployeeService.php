@@ -8,17 +8,21 @@ use App\Packages\Employee\DTOs\SellerDTO;
 use App\Packages\Employee\Repositories\EmployeeRepository;
 use App\Packages\EmployeeFunction\Enum\FunctionSlugEnum;
 use App\Packages\Person\Repositories\PersonRepository;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
+use LaravelIdea\Helper\App\Packages\Employee\Models\_IH_Employee_C;
 use Throwable;
 
 class EmployeeService {
 
 
-    public function listSellers(?int $per_page = 15) {
+    /**
+     * @return mixed
+     */
+    public function listSellers(): mixed {
         $user_data = app(UserDataInCacheService::class)->execute(getToken());
         $company_id = data_get($user_data, 'company.id');
-
-        return app(EmployeeRepository::class)->listSellersByCompany($company_id, $per_page ?? 15);
+        return app(EmployeeRepository::class)->listSellersByCompany($company_id);
     }
 
     /**

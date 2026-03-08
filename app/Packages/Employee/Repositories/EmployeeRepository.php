@@ -6,7 +6,8 @@ use App\Base\Repository\BaseRepository;
 use App\Packages\Employee\Models\Employee;
 use App\Packages\EmployeeFunction\Enum\FunctionSlugEnum;
 use DB;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
+use LaravelIdea\Helper\App\Packages\Employee\Models\_IH_Employee_C;
 
 class EmployeeRepository extends BaseRepository {
 
@@ -14,24 +15,26 @@ class EmployeeRepository extends BaseRepository {
         $this->setModel(Employee::class);
     }
 
+
     /**
      * @param int $company_id
-     * @param int|null $per_page
-     * @return LengthAwarePaginator
+     * @return Collection|_IH_Employee_C|array
      */
-    public function listSellersByCompany(int $company_id, ?int $per_page = 15): LengthAwarePaginator {
-        return $this->model
+    public function listSellersByCompany(int $company_id): Collection|_IH_Employee_C|array {
+        return Employee::query()
+            ->from('social.employee as e')
             ->join('social.person as p', 'e.person_id', '=', 'p.id')
+            ->where('e.company_id', '=', $company_id)
+            ->where('e.employee_function_id', '=', FunctionSlugEnum::getId(FunctionSlugEnum::VENDEDOR))
+            ->whereNull('e.ends_at')
             ->select([
+                'e.id',
                 'p.name',
                 'p.phone',
                 'p.email',
                 'e.start_at'
             ])
-            ->where('e.company_id', $company_id)
-            ->where('e.employee_function_id', FunctionSlugEnum::getId(FunctionSlugEnum::VENDEDOR))
-            ->whereNull('e.ends_at')
-            ->paginate($per_page);
+            ->get();
     }
 
     /**

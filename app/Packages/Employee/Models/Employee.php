@@ -30,11 +30,4 @@ class Employee extends Model {
     public function employeeFunction(): BelongsTo {
         return $this->belongsTo(EmployeeFunction::class);
     }
-
-    protected function casts(): array {
-        return [
-            'start_at' => 'date',
-            'ends_at' => 'date',
-        ];
-    }
 }
