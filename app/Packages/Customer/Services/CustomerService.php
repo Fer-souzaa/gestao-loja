@@ -83,4 +83,22 @@ class CustomerService {
 
         return $customer;
     }
+
+    /**
+     * @param int $id
+     * @return bool
+     * @throws Throwable
+     */
+    public function destroy(int $id): bool {
+        $user_data = app(UserDataInCacheService::class)->execute(getToken());
+        $companyId = (int) data_get($user_data, 'company.id');
+
+        $deleted = app(CustomerRepository::class)->destroy($id, $companyId);
+
+        if (!$deleted) {
+            throw new \Exception('Cliente não encontrado ou não pertence a sua empresa.', 404);
+        }
+
+        return $deleted;
+    }
 }

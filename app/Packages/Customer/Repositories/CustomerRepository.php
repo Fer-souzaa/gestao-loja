@@ -42,6 +42,7 @@ class CustomerRepository extends BaseRepository
             ->join('social.person as p', 'c.person_id', '=', 'p.id')
             ->where('c.id', $id)
             ->where('c.company_id', $companyId)
+            ->whereNull('c.deleted_at')
             ->select([
                 'c.id',
                 'c.address',
@@ -65,6 +66,7 @@ class CustomerRepository extends BaseRepository
         return \DB::table('social.customer as c')
             ->join('social.person as p', 'c.person_id', '=', 'p.id')
             ->where('c.company_id', $companyId)
+            ->whereNull('c.deleted_at')
             ->select([
                 'c.id',
                 'p.name',
@@ -74,5 +76,18 @@ class CustomerRepository extends BaseRepository
             ->orderBy('p.name')
             ->get()
             ->toArray();
+    }
+
+    /**
+     * @param int $id
+     * @param int $companyId
+     * @return bool
+     */
+    public function destroy(int $id, int $companyId): bool
+    {
+        return Customer::query()
+            ->where('id', $id)
+            ->where('company_id', $companyId)
+            ->delete();
     }
 }

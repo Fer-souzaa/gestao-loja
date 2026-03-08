@@ -60,4 +60,18 @@ class CustomerController extends BaseController {
             return $this->returnError($exception);
         }
     }
+
+    /**
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function destroy(int $id): JsonResponse {
+        try {
+            app(CustomerService::class)->destroy($id);
+
+            return $this->successResponse([], 'Cliente removido com sucesso!');
+        } catch (Throwable $exception) {
+            return $this->returnError($exception);
+        }
+    }
 }
