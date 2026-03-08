@@ -57,6 +57,40 @@ class CustomerService {
     }
 
     /**
+     * @param int $id
+     * @param CustomerStoreDTO $dto
+     * @return array
+     * @throws Throwable
+     */
+    public function update(int $id, CustomerStoreDTO $dto): array {
+        return DB::transaction(function () use ($id, $dto) {
+            $user_data = app(UserDataInCacheService::class)->execute(getToken());
+            $companyId = (int) data_get($user_data, 'company.id');
+
+            $updated = app(CustomerRepository::class)->updateCustomerAndPerson(
+                $id,
+                $companyId,
+                [
+                    'billing_date' => $dto->billing_date,
+                    'address' => $dto->address,
+                ],
+                [
+                    'name' => $dto->name,
+                    'cpf' => $dto->cpf,
+                    'phone' => $dto->phone,
+                    'registration_date' => $dto->registration_date,
+                ]
+            );
+
+            if (!$updated) {
+                throw new \Exception('Cliente não encontrado ou não pertence a sua empresa.', 404);
+            }
+
+            return $this->show($id);
+        });
+    }
+
+    /**
      * @return array
      */
     public function list(): array {

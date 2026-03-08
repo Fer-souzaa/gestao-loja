@@ -62,6 +62,24 @@ class CustomerController extends BaseController {
     }
 
     /**
+     * @param CustomerStoreRequest $request
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function update(CustomerStoreRequest $request, int $id): JsonResponse {
+        try {
+            $data = app(CustomerService::class)->update(
+                $id,
+                CustomerStoreDTO::fromRequest($request->validated())
+            );
+
+            return $this->successResponse($data, 'Cliente atualizado com sucesso!');
+        } catch (Throwable $exception) {
+            return $this->returnError($exception);
+        }
+    }
+
+    /**
      * @param int $id
      * @return JsonResponse
      */

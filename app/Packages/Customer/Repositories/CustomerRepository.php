@@ -81,6 +81,30 @@ class CustomerRepository extends BaseRepository
     /**
      * @param int $id
      * @param int $companyId
+     * @param array $customerData
+     * @param array $personData
+     * @return bool
+     */
+    public function updateCustomerAndPerson(int $id, int $companyId, array $customerData, array $personData): bool
+    {
+        $customer = Customer::query()
+            ->where('id', $id)
+            ->where('company_id', $companyId)
+            ->first();
+
+        if (!$customer) {
+            return false;
+        }
+
+        $customer->update($customerData);
+        $customer->person->update($personData);
+
+        return true;
+    }
+
+    /**
+     * @param int $id
+     * @param int $companyId
      * @return bool
      */
     public function destroy(int $id, int $companyId): bool
