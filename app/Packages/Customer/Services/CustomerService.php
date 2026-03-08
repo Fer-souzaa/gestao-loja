@@ -37,7 +37,7 @@ class CustomerService {
                 );
             }
 
-            $customer = app(CustomerRepository::class)->createCustomer([
+            $customer = app(CustomerRepository::class)->create([
                 'person_id' => $person->id,
                 'company_id' => data_get($user_data, 'company.id'),
                 'billing_date' => $dto->billing_date,
