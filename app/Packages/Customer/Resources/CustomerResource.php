@@ -17,6 +17,7 @@ class CustomerResource extends JsonResource {
             'cpf' => $this->cpf,
             'phone' => $this->phone,
             'purchases' => 0,
+            'has_purchase' => false
         ];
     }
 }
