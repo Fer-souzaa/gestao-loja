@@ -4,9 +4,11 @@ namespace App\Packages\Auth\Services;
 
 use App\Base\Traits\CacheTrait;
 use App\Packages\Auth\Models\User;
+use App\Packages\Employee\Repositories\EmployeeRepository;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Throwable;
 
 class LoginService {
@@ -30,6 +32,11 @@ class LoginService {
                 throw new ModelNotFoundException('Usuário ou senha incorretos!');
             }
 
+            $employee_data = app(EmployeeRepository::class)->getEmployeeByPersonId($user->person_id);
+            if (!$employee_data) {
+                throw new ConflictHttpException('Você não está vinculado a uma empresa!');
+            }
+
             $access_token = app(GeneratePersonalAccessTokenService::class)->execute($user);
 
             $this->clearUserCache($user->id);
@@ -41,7 +48,8 @@ class LoginService {
                 'user' => [
                     'id' => $user->id,
                     'username' => $user->username
-                ]
+                ],
+                ...json_decode($employee_data, true)
             ];
         });
     }
