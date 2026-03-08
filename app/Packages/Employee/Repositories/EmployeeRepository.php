@@ -34,6 +34,7 @@ class EmployeeRepository extends BaseRepository {
                 'p.email',
                 'e.start_at'
             ])
+            ->orderBy('p.name')
             ->get();
     }
 
